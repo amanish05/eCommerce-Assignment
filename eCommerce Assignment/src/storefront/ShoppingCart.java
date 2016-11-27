@@ -1,21 +1,31 @@
 package storefront;
 
-import java.util.HashMap;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import eCommerce.InventoryModel;
 
 public class ShoppingCart {
-	private Map<String, ShoppingCartItem> shoppingCartItemMap = new HashMap<>();
+	private static final DecimalFormat df = new DecimalFormat("#.##");
+	private Map<String, ShoppingCartItem> shoppingCartItemMap = new LinkedHashMap<>();
 
-	void add(InventoryModel inventoryModel) {
+	boolean add(InventoryModel inventoryModel) {
 		if (inventoryModel != null) {
 			if (shoppingCartItemMap.containsKey(inventoryModel.getId())) {
-				shoppingCartItemMap.get(inventoryModel.getId()).incrementQuantity();
+				return shoppingCartItemMap.get(inventoryModel.getId()).incrementQuantity();
 			} else {
 				shoppingCartItemMap.put(inventoryModel.getId(), new ShoppingCartItem(inventoryModel));
+				return true;
 			}
 		}
+		return false;
+	}
+
+	public Collection<ShoppingCartItem> getItemList() {
+		return shoppingCartItemMap.values();
 	}
 
 	public ShoppingCartItem getShoppingCartItem(String id) {
@@ -32,5 +42,14 @@ public class ShoppingCart {
 			itemCount += shoppingCartItem.getQuantityOrdered();
 		}
 		return itemCount;
+	}
+
+	public float getTotalPrice() {
+		float totalPrice = 0;
+		for (ShoppingCartItem cartItem : shoppingCartItemMap.values()) {
+			totalPrice += cartItem.getTotalPrice();
+		}
+		df.setRoundingMode(RoundingMode.HALF_DOWN);
+		return Float.valueOf(df.format(totalPrice));
 	}
 }
