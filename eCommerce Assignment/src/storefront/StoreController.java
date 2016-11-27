@@ -33,7 +33,6 @@ public class StoreController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
-
 			String action = request.getParameter("action");
 			if ("add".equals(action)) {
 				performAddToShoppingCart(request, response);
@@ -41,6 +40,8 @@ public class StoreController extends HttpServlet {
 				displayNextSetOfItems(request, response);
 			} else if ("prev".equals(action)) {
 				displayPrevSetOfItems(request, response);
+			} else if ("itemList".equals(action)) {
+				displaySameSetOfItems(request, response);
 			} else {
 				displayFirstSetOfItems(request, response);
 			}
@@ -56,25 +57,24 @@ public class StoreController extends HttpServlet {
 		InventoryModel matchingItem = inventoryDAO.getInventoryItem(id);
 		if (matchingItem == null) {
 			request.setAttribute("error", "No matching item with id " + id + " found in inventory!");
-			request.getRequestDispatcher("/WEB-INF/Storefront/Storefront.jsp").forward(request, response);
-			return;
 		} else if (matchingItem.getQuantity() <= 0) {
 			request.setAttribute("error", "Item " + matchingItem.getName() + " is no longer available!");
-			request.getRequestDispatcher("/WEB-INF/Storefront/Storefront.jsp").forward(request, response);
-			return;
 		} else {
-			addItemToCart(request, matchingItem);
+			boolean added = addItemToCart(request, matchingItem);
+			if (!added) {
+				request.setAttribute("error", "Item " + matchingItem.getName() + " is no longer available!");
+			}
 		}
 		displaySameSetOfItems(request, response);
 	}
 
-	private void addItemToCart(HttpServletRequest request, InventoryModel matchingItem) {
+	private boolean addItemToCart(HttpServletRequest request, InventoryModel matchingItem) {
 		ShoppingCart shoppingCart = (ShoppingCart) request.getSession().getAttribute("cart");
 		if (shoppingCart == null) {
 			shoppingCart = new ShoppingCart();
 			request.getSession().setAttribute("cart", shoppingCart);
 		}
-		shoppingCart.add(matchingItem);
+		return shoppingCart.add(matchingItem);
 	}
 
 	private void displayFirstSetOfItems(HttpServletRequest request, HttpServletResponse response)
@@ -99,7 +99,7 @@ public class StoreController extends HttpServlet {
 				shoppingCart);
 		int totalPages = getTotalPages(displayableInventoryList);
 		String currentPageString = request.getParameter("page");
-		if (currentPageString != null) {
+		if (currentPageString != null && !currentPageString.isEmpty()) {
 			int currentPage = Integer.parseInt(currentPageString);
 			if (currentPage > 0 && currentPage < totalPages) {
 				setInventorySameDisplayWindow(request, displayableInventoryList, currentPage, totalPages);
@@ -114,7 +114,6 @@ public class StoreController extends HttpServlet {
 	}
 
 	private int getTotalPages(List<InventoryModel> displayableInventoryList) {
-		System.out.println("displayableInventoryList.size() : " + displayableInventoryList.size());
 		int totalPages = (int) Math.ceil(displayableInventoryList.size() / 10.0);
 		return totalPages;
 	}
@@ -128,7 +127,7 @@ public class StoreController extends HttpServlet {
 				shoppingCart);
 		int totalPages = getTotalPages(displayableInventoryList);
 		String currentPageString = request.getParameter("page");
-		if (currentPageString != null) {
+		if (currentPageString != null && !currentPageString.isEmpty()) {
 			int currentPage = Integer.parseInt(currentPageString);
 			if (currentPage > 0 && currentPage < totalPages) {
 				setInventoryNextDisplayWindow(request, displayableInventoryList, currentPage, totalPages);
@@ -151,7 +150,7 @@ public class StoreController extends HttpServlet {
 				shoppingCart);
 		int totalPages = getTotalPages(displayableInventoryList);
 		String currentPageString = request.getParameter("page");
-		if (currentPageString != null) {
+		if (currentPageString != null && !currentPageString.isEmpty()) {
 			int currentPage = Integer.parseInt(currentPageString);
 			if (currentPage > 1 && currentPage <= totalPages) {
 				setInventoryPrevDisplayWindow(request, displayableInventoryList, currentPage, totalPages);
@@ -170,12 +169,10 @@ public class StoreController extends HttpServlet {
 		int inventoryBeginIndex = currentPage * 10;
 		int inventoryEndIndex = ((currentPage + 1) * 10 <= displayableInventoryList.size()) ? ((currentPage + 1) * 10)
 				: displayableInventoryList.size();
-		System.out.println("setInventoryNextDisplayWindow[inventoryBeginIndex=" + inventoryBeginIndex
-				+ ",inventoryEndIndex=" + inventoryEndIndex + "]");
 		request.setAttribute("inventoryBeginIndex", inventoryBeginIndex);
 		request.setAttribute("inventoryEndIndex", inventoryEndIndex);
 		request.setAttribute("page", (currentPage + 1));
-		setTotalPagesAndCartItemCount(request, totalPages);
+		request.setAttribute("totalPages", totalPages);
 	}
 
 	private void setInventorySameDisplayWindow(HttpServletRequest request,
@@ -183,12 +180,10 @@ public class StoreController extends HttpServlet {
 		int inventoryBeginIndex = (currentPage - 1) * 10;
 		int inventoryEndIndex = (currentPage * 10 <= displayableInventoryList.size()) ? (currentPage * 10)
 				: displayableInventoryList.size();
-		System.out.println("setInventorySameDisplayWindow[inventoryBeginIndex=" + inventoryBeginIndex
-				+ ",inventoryEndIndex=" + inventoryEndIndex + "]");
 		request.setAttribute("inventoryBeginIndex", inventoryBeginIndex);
 		request.setAttribute("inventoryEndIndex", inventoryEndIndex);
 		request.setAttribute("page", currentPage);
-		setTotalPagesAndCartItemCount(request, totalPages);
+		request.setAttribute("totalPages", totalPages);
 	}
 
 	private void setInventoryPrevDisplayWindow(HttpServletRequest request,
@@ -196,34 +191,19 @@ public class StoreController extends HttpServlet {
 		int inventoryBeginIndex = (currentPage - 2) * 10;
 		int inventoryEndIndex = ((currentPage - 1) * 10 <= displayableInventoryList.size()) ? ((currentPage - 1) * 10)
 				: displayableInventoryList.size();
-		System.out.println("setInventoryPrevDisplayWindow[inventoryBeginIndex=" + inventoryBeginIndex
-				+ ",inventoryEndIndex=" + inventoryEndIndex + "]");
 		request.setAttribute("inventoryBeginIndex", inventoryBeginIndex);
 		request.setAttribute("inventoryEndIndex", inventoryEndIndex);
 		request.setAttribute("page", (currentPage - 1));
-		setTotalPagesAndCartItemCount(request, totalPages);
+		request.setAttribute("totalPages", totalPages);
 	}
 
 	private void setInventoryDisplayWindowForFirstPage(HttpServletRequest request,
 			List<InventoryModel> displayableInventoryList, int totalPages) {
 		request.setAttribute("page", 1);
-		System.out.println(
-				"setInventoryDisplayWindowForFirstPage[inventoryBeginIndex=" + 0 + ",inventoryEndIndex=" + 10 + "]");
 		request.setAttribute("inventoryBeginIndex", 0);
 		request.setAttribute("inventoryEndIndex",
 				(displayableInventoryList.size() > 10 ? 10 : displayableInventoryList.size()));
-		setTotalPagesAndCartItemCount(request, totalPages);
-	}
-
-	private void setTotalPagesAndCartItemCount(HttpServletRequest request, int totalPages) {
-		System.out.println("totalPages = " + totalPages);
 		request.setAttribute("totalPages", totalPages);
-		ShoppingCart shoppingCart = (ShoppingCart) request.getSession().getAttribute("cart");
-		if (shoppingCart == null) {
-			request.setAttribute("shoppingCartItems", 0);
-		} else {
-			request.setAttribute("shoppingCartItems", shoppingCart.getItemCount());
-		}
 	}
 
 	/**

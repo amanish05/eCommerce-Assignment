@@ -12,6 +12,15 @@
 </head>
 <body>
 	<div class="container">
+		<c:if test="${not empty error}">
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<strong>${error}</strong>
+			</div>
+		</c:if>
 
 		<!-- Page Header -->
 		<div class="page-header">
@@ -20,9 +29,19 @@
 					<h2>Storefront</h2>
 				</div>
 				<div class="col-md-2 col-md-offset-9"">
-					<a href="#"><img src="Images/cart.png"
-						style="vertical-align: middle" /></a> <span style="">${shoppingCartItems}
-						Item(s)</span>
+					<c:url value="ShoppingCart" var="url">
+						<c:param name="page" value="${page}" />
+					</c:url>
+					<a href="${url}"><img src="Images/cart.png"
+						style="vertical-align: middle" /></a>
+					<c:choose>
+						<c:when test="${not empty sessionScope.cart}">
+							<span style="">${sessionScope.cart.itemCount} Item(s)</span>
+						</c:when>
+						<c:otherwise>
+							<span style="">0 Item(s)</span>
+						</c:otherwise>
+					</c:choose>
 				</div>
 			</div>
 		</div>
@@ -37,9 +56,10 @@
 			<table class="table table-hover table-striped table-bordered">
 				<thead>
 					<tr>
-						<th>Item Name</th>
-						<th>Item Description</th>
-						<th>Price</th>
+						<th style="text-align: center;">Item Name</th>
+						<th style="text-align: center;">Item Description</th>
+						<th style="text-align: center;">Price</th>
+						<th style="text-align: center;">Item Detail</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -50,7 +70,14 @@
 							<td>${inventoryList[index].name}</td>
 							<td>${inventoryList[index].description}</td>
 							<td>${inventoryList[index].price}</td>
-							<td><c:url value="Store" var="url">
+							<td style="text-align: center;"><c:url value="Details"
+									var="url">
+									<c:param name="id" value="${inventoryList[index].id}" />
+									<c:param name="page" value="${page}" />
+								</c:url> <a href="${url}"><img src="Images/viewDetail2.png"
+									style="vertical-align: middle" /></a></td>
+							<td style="text-align: center;"><c:url value="Store"
+									var="url">
 									<c:param name="id" value="${inventoryList[index].id}" />
 									<c:param name="action" value="add" />
 									<c:param name="page" value="${page}" />
