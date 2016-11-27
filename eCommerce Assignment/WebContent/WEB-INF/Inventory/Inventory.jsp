@@ -5,46 +5,44 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Object Transformer's</title>
 <head>
-<title>Store Inventory</title>
-<link rel='stylesheet'
-	href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+
+<link rel="stylesheet"	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<title>Inventory Management</title>
 </head>
 <body>
-	<form action='Inventory' method='get' class='form-inline'>
-		<input type='search' class='form-control' name='query' placeholder='Search' />
-		<button type='submit' class='btn btn-info'>Go on</button>
-		<a class='btn btn-warning' href='Logout'>Logout </a>
-	</form>
+
+	<h2>Inventory Management</h2>
 	
 	<table class="table table-bordered table-striped table-hover">
-		<c:choose>
-			<c:when test="${empty todos}">
-				<div class="jumbotron">
-					<h1>Uh-Oh! <small>There are no item to display.</small>	</h1>
-				</div>
-			</c:when>
-			<c:when test="${not empty todos}">
+		<c:if test="${empty inventories}">
+			<div class="jumbotron">
+				<h1>
+					Uh-Oh! <small>There are no items to display.</small>
+				</h1>
+			</div>
+		</c:if>
+		<c:if test="${not empty inventories}">
+			<tr>
+				<th>Item Name</th>
+				<th>Description</th>
+				<th>Price per Unit</th>
+				<th>Available Quantity</th>
+				<th>Action</th>
+			</tr>
+			<c:forEach items="${inventories}" var="inventory">
 				<tr>
-					<th>Name</th>					
-					<th>Price</th>					
-					<th>Required</th>
-		</tr>
-				
-			</c:when>			
-		</c:choose>		
-		
-		<tr>
-			<th>Name</th>
-			<th>Description</th>
-			<th>Quantity</th>
-			<th>Price</th>
-			<th>Action</th>
-			<th>Required</th>
-		</tr>
-		
-	</table>
-
+					<td><c:out value="${inventory.name}" escapeXml="true" /></td>
+					<td><c:out value="${inventory.description}" escapeXml="true" /></td>
+					<td><c:out value="${inventory.price}" escapeXml="true" /></td>
+					<td><c:out value="${inventory.quantity}" escapeXml="true" /></td>
+					<td><a class="btn btn-primary btn-sm" href="Update?id=${inventory.id}">Edit</a></td>
+					<td><a class="btn btn-primary btn-sm" href="Remove?id=${inventory.id}">Erase</a></td>							
+				</tr>
+			</c:forEach>
+		</c:if>
+	</table>	
+	<a class="btn btn-primary btn-sm" href="AddItem">Add New Item</a>		
 </body>
 </html>

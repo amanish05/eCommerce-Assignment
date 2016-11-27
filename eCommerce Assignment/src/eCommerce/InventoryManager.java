@@ -3,7 +3,9 @@ package eCommerce;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.Date;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,6 +27,42 @@ public class InventoryManager extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		String sql =  "Select i.INVENTORY_PGUID, i.INVENTORY_NAME, i.INVENTORY_DESC, i.INVENTORY_PRICE_PER_UNIT, i.AVAILABLE_QUANTITY from inventory i";
+		ResultSet rs;
+		
+		List<InventoryModel> inventories = null;
+		System.out.println("InventoryManager: doGet Executing");
+		try{			
+			connection = DBConnection.getConnection();
+			System.out.println("InventoryManager: doGet Executing");
+			PreparedStatement pstmt = connection.prepareStatement(sql);
+			System.out.println("InventoryManager: doGet Executing");
+			rs = pstmt.executeQuery();
+			System.out.println("InventoryManager: doGet Executing");
+			inventories = new ArrayList<>(rs.getFetchSize());
+			
+			while(rs.next()){
+				System.out.println("InventoryManager: doGet Setting model Object");
+				InventoryModel model = new InventoryModel();
+				model.setId(rs.getString("INVENTORY_PGUID"));
+				model.setName(rs.getString("INVENTORY_NAME"));
+				model.setDescription(rs.getString("INVENTORY_DESC"));
+				model.setPrice(rs.getFloat("INVENTORY_PRICE_PER_UNIT"));
+				model.setQuantity(rs.getInt("AVAILABLE_QUANTITY"));
+				
+				inventories.add(model);
+			}
+			
+		}catch(Exception e){
+			System.out.println("Exception while adding data. Error: " +e.getMessage());
+		}finally{
+			DBConnection.closeConnection(connection);
+		}
+		
+		request.setAttribute("inventories", inventories);
+		request.getRequestDispatcher("/WEB-INF/Inventory/Inventory.jsp").forward(request, response);
+		
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,8 +75,7 @@ public class InventoryManager extends HttpServlet {
 			request.setAttribute("NameError", true);
 		}
 		
-		String desc = request.getParameter("description");
-		
+		String desc = request.getParameter("description");		
 		String quantity = request.getParameter("quantity");			
 		try{			
 			Integer.parseInt(quantity);
@@ -55,9 +92,10 @@ public class InventoryManager extends HttpServlet {
 			request.setAttribute("priceError", true);
 		}		
 		
+		System.out.println("InventoryManager: doPost Executing");
 		if(!isError){
 			
-			String sql = "insert into inventory(INVENTORY_PGUID, INVENTORY_NAME, INVENTORY_DESC,INVENTORY_PRICE_PER_UNIT,AVAILABLE_QUANTITY, CREATED_DATETIME) values (?, ?, ?,?,?,?)";
+			String sql = "insert into inventory(INVENTORY_PGUID, INVENTORY_NAME, INVENTORY_DESC,INVENTORY_PRICE_PER_UNIT,AVAILABLE_QUANTITY, CREATED_DATETIME) values (?, ?, ?,?,?,now())";
 			try{
 				
 				connection = DBConnection.getConnection();			
@@ -66,10 +104,10 @@ public class InventoryManager extends HttpServlet {
 				pstmt.setString(2, name);
 				pstmt.setString(3, desc);
 				pstmt.setString(4, quantity);
-				pstmt.setString(5, price);
-				pstmt.setString(6, new Date().toString());
+				pstmt.setString(5, price);				
 				
-				pstmt.execute();			
+				pstmt.execute();
+				doGet(request, response);
 				
 			}catch(Exception e){
 				System.out.println("Exception while adding data. Error: " +e.getMessage());
@@ -78,7 +116,8 @@ public class InventoryManager extends HttpServlet {
 			}
 			
 		}else{
-			request.getRequestDispatcher("/WEB-INF/Views/AddItem.jsp").forward(request, response);
+			System.out.println("InventoryManager: doPost transfrring ");
+			request.getRequestDispatcher("/WEB-INF/Inventory/AddInventory.jsp").forward(request, response);
 		}			
 	}
 }

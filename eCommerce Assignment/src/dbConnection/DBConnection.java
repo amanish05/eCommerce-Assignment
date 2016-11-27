@@ -7,9 +7,11 @@ import java.sql.SQLException;
 import javax.servlet.ServletException;
 
 public final class DBConnection {
+	
 	public static enum DBName {
 		MANI, MANISH, TEE;
 	}
+	private static DBConnection dbconnection;
 
 	// Mani
 	private static final String MANI_DB_URL = "jdbc:mysql://cs3.calstatela.edu/cs3220stu32";
@@ -23,6 +25,10 @@ public final class DBConnection {
 	private static final String TEE_DB_URL = "";
 	private static final String TEE_DB_USER = "";
 	private static final String TEE_DB_PASS = "";
+	
+	private DBConnection() throws ServletException{
+		loadDriver();
+	}
 
 	public static Connection getConnection() throws ServletException {
 		return getConnection(DBName.MANISH);
@@ -31,7 +37,9 @@ public final class DBConnection {
 	public static Connection getConnection(DBName dbName) throws ServletException {
 		Connection c = null;
 		try {
-			loadDriver();
+			if(dbconnection == null){
+				dbconnection = new DBConnection();
+			}
 			if (dbName == DBName.MANI) {
 				c = DriverManager.getConnection(MANI_DB_URL, MANI_DB_USER, MANI_DB_PASS);
 			} else if (dbName == DBName.MANISH) {
