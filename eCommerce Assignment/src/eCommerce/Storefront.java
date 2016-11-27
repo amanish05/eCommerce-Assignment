@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dbConnection.DBConnection;
 
-@WebServlet("/Store")
+@WebServlet("/StoreRemove")
 public class Storefront extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Connection connection;
