@@ -50,8 +50,7 @@ public class InventoryModel {
 		inventoryModel.setName(name);
 		inventoryModel.setDescription(desc);
 		inventoryModel.setQuantity(quan);
-		inventoryModel.setPrice(price);
-		inventoryModel.setAddedDate(new Date());
+		inventoryModel.setPrice(price);		
 		
 		return inventoryModel;
 	}

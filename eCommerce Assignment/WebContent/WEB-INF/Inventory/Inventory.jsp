@@ -15,7 +15,7 @@
 
 	<h2>Inventory Management</h2>
 	
-	<table class="table table-bordered table-striped table-hover">
+	<table class="table table-bordered">
 		<c:if test="${empty inventories}">
 			<div class="jumbotron">
 				<h1>
@@ -37,8 +37,8 @@
 					<td><c:out value="${inventory.description}" escapeXml="true" /></td>
 					<td><c:out value="${inventory.price}" escapeXml="true" /></td>
 					<td><c:out value="${inventory.quantity}" escapeXml="true" /></td>
-					<td><a class="btn btn-primary btn-sm" href="Update?id=${inventory.id}">Edit</a></td>
-					<td><a class="btn btn-primary btn-sm" href="Remove?id=${inventory.id}">Erase</a></td>							
+					<td><a class="btn btn-primary btn-sm" href="Update?id=${inventory.id}">Edit</a>
+						<a class="btn btn-danger" href="Remove?id=${inventory.id}">Erase</a></td>							
 				</tr>
 			</c:forEach>
 		</c:if>

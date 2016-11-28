@@ -19,7 +19,7 @@ public class InventoryDAO {
 	public List<InventoryModel> getAvailableInventoryList() throws SQLException, ServletException {
 		Connection c = null;
 		try {
-			c = DBConnection.getConnection(DBName.MANI);
+			c = DBConnection.getConnection(DBName.MANISH);
 
 			Statement stmt = c.createStatement();
 			ResultSet rs = stmt.executeQuery("select * from inventory where available_quantity > 0");
@@ -48,10 +48,10 @@ public class InventoryDAO {
 		if (id != null && !id.isEmpty()) {
 			Connection c = null;
 			try {
-				c = DBConnection.getConnection(DBName.MANI);
+				c = DBConnection.getConnection(DBName.MANISH);
 
 				PreparedStatement stmt = c.prepareStatement("select * from inventory where inventory_pguid = ?");
-				stmt.setInt(1, Integer.valueOf(id));
+				stmt.setString(1, id);
 				ResultSet rs = stmt.executeQuery();
 
 				if (rs.next()) {

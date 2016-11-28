@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,9 +25,8 @@ public class UpdateInventory extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		Connection connection = null;
-		InventoryModel model = null;
-		String sql = "Select i.INVENTORY_PGUID, i.INVENTORY_NAME, i.INVENTORY_DESC, i.AVAILABLE_QUANTITY, i.INVENTORY_PRICE_PER_UNIT from inventory i where i.INVENTORY_PGUID = ?";
+		Connection connection = null;		
+		String sql = "Select i.INVENTORY_PGUID, i.INVENTORY_NAME, i.INVENTORY_DESC, i.AVAILABLE_QUANTITY, i.INVENTORY_PRICE_PER_UNIT from inventory i where i.INVENTORY_PGUID = ? LIMIT 1";
 		
 		try{
 			connection = DBConnection.getConnection();
@@ -40,27 +36,21 @@ public class UpdateInventory extends HttpServlet {
 			ResultSet rs = pstmt.executeQuery();			
 			
 			while(rs.next()){
-				model = new InventoryModel();
-				model.setId(rs.getString("INVENTORY_PGUID"));
-				model.setName(rs.getString("INVENTORY_NAME"));
-				model.setDescription(rs.getString("INVENTORY_DESC"));
-				model.setPrice(rs.getFloat("INVENTORY_PRICE_PER_UNIT"));
-				model.setQuantity(rs.getInt("AVAILABLE_QUANTITY"));				
+				request.setAttribute("inventory",InventoryModel.getInitiated(rs.getString("INVENTORY_PGUID"), rs.getString("INVENTORY_NAME"), 
+						rs.getString("INVENTORY_DESC"), rs.getInt("AVAILABLE_QUANTITY"), rs.getFloat("INVENTORY_PRICE_PER_UNIT")));				
 			}
 				
 		}catch(Exception e){
-			System.out.println("Exception while Archiving state. Error: " +e.getMessage());			
+			System.out.println("Exception while fetching update state. Error: " +e.getMessage());			
 		}finally{
 			DBConnection.closeConnection(connection);
 		}		
-		request.setAttribute("inventory", model);
 		request.getRequestDispatcher("/WEB-INF/Inventory/AddInventory.jsp").forward(request, response);		
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
-		Connection connection = null;
-		InventoryModel model = null;
+		Connection connection = null;		
 		String sql = "Update inventory set INVENTORY_NAME =?, INVENTORY_DESC =?, AVAILABLE_QUANTITY =?, INVENTORY_PRICE_PER_UNIT=? where INVENTORY_PGUID = ?";
 		
 		boolean isError = false;

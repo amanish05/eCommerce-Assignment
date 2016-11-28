@@ -27,7 +27,7 @@
 			<div class="row">
 				<div class="col-md-1">
 					<h2>Storefront</h2>
-				</div>
+				</div>				
 				<div class="col-md-2 col-md-offset-9"">
 					<c:url value="ShoppingCart" var="url">
 						<c:param name="page" value="${page}" />
@@ -45,6 +45,7 @@
 				</div>
 			</div>
 		</div>
+			
 
 		<c:if test="${empty inventoryList}">
 			<div class="jumbotron">
@@ -85,7 +86,8 @@
 						</tr>
 					</c:forEach>
 				</tbody>
-			</table>
+			</table>			
+				
 			<div class="row">
 				<div class="col-md-1 col-md-offset-10">
 					<c:choose>
@@ -117,6 +119,12 @@
 				</div>
 			</div>
 		</c:if>
+		<div class="col-md-20">
+			<a class="btn btn-primary btn-lg active" href="Inventory" >Inventory Manager</a>
+		</div>
 	</div>
+	
+	
+	
 </body>
 </html>

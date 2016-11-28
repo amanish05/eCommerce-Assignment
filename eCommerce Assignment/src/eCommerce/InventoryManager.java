@@ -27,34 +27,23 @@ public class InventoryManager extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String sql =  "Select i.INVENTORY_PGUID, i.INVENTORY_NAME, i.INVENTORY_DESC, i.INVENTORY_PRICE_PER_UNIT, i.AVAILABLE_QUANTITY from inventory i";
 		ResultSet rs;
-		
+		String sql =  "Select i.INVENTORY_PGUID, i.INVENTORY_NAME, i.INVENTORY_DESC, i.INVENTORY_PRICE_PER_UNIT, i.AVAILABLE_QUANTITY from inventory i";				
 		List<InventoryModel> inventories = null;
-		System.out.println("InventoryManager: doGet Executing");
+		
 		try{			
-			connection = DBConnection.getConnection();
-			System.out.println("InventoryManager: doGet Executing");
-			PreparedStatement pstmt = connection.prepareStatement(sql);
-			System.out.println("InventoryManager: doGet Executing");
-			rs = pstmt.executeQuery();
-			System.out.println("InventoryManager: doGet Executing");
-			inventories = new ArrayList<>(rs.getFetchSize());
+			connection = DBConnection.getConnection();			
+			PreparedStatement pstmt = connection.prepareStatement(sql);			
+			rs = pstmt.executeQuery();			
 			
+			inventories = new ArrayList<>(rs.getFetchSize());			
 			while(rs.next()){
-				System.out.println("InventoryManager: doGet Setting model Object");
-				InventoryModel model = new InventoryModel();
-				model.setId(rs.getString("INVENTORY_PGUID"));
-				model.setName(rs.getString("INVENTORY_NAME"));
-				model.setDescription(rs.getString("INVENTORY_DESC"));
-				model.setPrice(rs.getFloat("INVENTORY_PRICE_PER_UNIT"));
-				model.setQuantity(rs.getInt("AVAILABLE_QUANTITY"));
-				
-				inventories.add(model);
+				inventories.add(InventoryModel.getInitiated(rs.getString("INVENTORY_PGUID"), rs.getString("INVENTORY_NAME"), 
+						rs.getString("INVENTORY_DESC"), rs.getInt("AVAILABLE_QUANTITY"), rs.getFloat("INVENTORY_PRICE_PER_UNIT")));
 			}
 			
 		}catch(Exception e){
-			System.out.println("Exception while adding data. Error: " +e.getMessage());
+			System.out.println("Exception while data request. Error: " +e.getMessage());
 		}finally{
 			DBConnection.closeConnection(connection);
 		}
@@ -76,17 +65,19 @@ public class InventoryManager extends HttpServlet {
 		}
 		
 		String desc = request.getParameter("description");		
-		String quantity = request.getParameter("quantity");			
+		String quantity = request.getParameter("quantity");
+		int quan = 0 ;
 		try{			
-			Integer.parseInt(quantity);
+			quan = Integer.parseInt(quantity);
 		}catch(NumberFormatException e){
 			isError = true;
 			request.setAttribute("QuantityError", true);
 		}	
 		
 		String price = request.getParameter("price");
+		float charge = 0;
 		try{			
-			Float.parseFloat(price);
+			charge =Float.parseFloat(price);
 		}catch(NumberFormatException e){
 			isError = true;
 			request.setAttribute("priceError", true);
@@ -103,14 +94,14 @@ public class InventoryManager extends HttpServlet {
 				pstmt.setString(1, SystemUtil.getUUID());		
 				pstmt.setString(2, name);
 				pstmt.setString(3, desc);
-				pstmt.setString(4, quantity);
-				pstmt.setString(5, price);				
+				pstmt.setInt(5, quan);
+				pstmt.setFloat(4, charge);				
 				
 				pstmt.execute();
 				doGet(request, response);
 				
 			}catch(Exception e){
-				System.out.println("Exception while adding data. Error: " +e.getMessage());
+				System.out.println("Exception while data insertion. Error: " +e.getMessage());
 			}finally{
 				DBConnection.closeConnection(connection);
 			}
