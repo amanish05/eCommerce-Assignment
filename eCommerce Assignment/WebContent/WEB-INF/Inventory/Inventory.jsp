@@ -11,38 +11,45 @@
 
 <title>Inventory Management</title>
 </head>
-<body>
-
-	<h2>Inventory Management</h2>
-	
-	<table class="table table-bordered">
-		<c:if test="${empty inventories}">
-			<div class="jumbotron">
-				<h1>
-					Uh-Oh! <small>There are no items to display.</small>
-				</h1>
+<body>	
+	<c:if test="${empty inventories}">
+		<div class="jumbotron">
+			<h1>
+				Uh-Oh! <small>There are no items to display.</small>
+			</h1>
+		</div>
+	</c:if>
+		
+	<c:if test="${not empty inventories}">
+		<div class="panel panel-primary">
+			<div class="panel-heading"><h2>Inventory Management</h2></div>
+				<div class="panel-body">
+					<table class="table table-hover table-striped table-bordered">
+						<thead>
+							<tr>								
+								<th style="text-align: center;">Item Name</th>
+								<th style="text-align: center;">Item Description</th>
+								<th style="text-align: center;">Quantity</th>
+								<th style="text-align: center;">Unit Price</th>
+								<th style="text-align: center;">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:forEach items="${inventories}" var="inventory">
+								<tr>
+									<td>${inventory.name}</td>
+									<td>${inventory.description}</td>
+									<td>${inventory.price}</td>
+									<td>${inventory.quantity}</td>
+									<td><a class="btn btn-primary btn-sm" href="Update?id=${inventory.id}">Edit</a>
+										<a class="btn btn-danger" href="Remove?id=${inventory.id}">Erase</a></td>
+								</tr>
+							</c:forEach>							
+						</tbody>
+				</table>
 			</div>
-		</c:if>
-		<c:if test="${not empty inventories}">
-			<tr>
-				<th>Item Name</th>
-				<th>Description</th>
-				<th>Price per Unit</th>
-				<th>Available Quantity</th>
-				<th>Action</th>
-			</tr>
-			<c:forEach items="${inventories}" var="inventory">
-				<tr>
-					<td><c:out value="${inventory.name}" escapeXml="true" /></td>
-					<td><c:out value="${inventory.description}" escapeXml="true" /></td>
-					<td><c:out value="${inventory.price}" escapeXml="true" /></td>
-					<td><c:out value="${inventory.quantity}" escapeXml="true" /></td>
-					<td><a class="btn btn-primary btn-sm" href="Update?id=${inventory.id}">Edit</a>
-						<a class="btn btn-danger" href="Remove?id=${inventory.id}">Erase</a></td>							
-				</tr>
-			</c:forEach>
-		</c:if>
-	</table>	
+		</div>					
+	</c:if>		
 	<a class="btn btn-primary btn-sm" href="AddItem">Add New Item</a>		
 </body>
 </html>

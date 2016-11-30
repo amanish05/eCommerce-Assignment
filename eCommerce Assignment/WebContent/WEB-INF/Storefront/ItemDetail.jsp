@@ -77,13 +77,19 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-2 col-md-offset-10">
+			
+				<c:url value="Store" var="url">
+					<c:param name="id" value="${item.id}" />
+					<c:param name="action" value="add" />
+					<c:param name="page" value="${page}" />
+				</c:url> <a class="btn btn-success" href="${url}">Add to cart</a>
+				
+				<div class="col-md-2 col-md-offset-10">					
 					<c:url value="Store" var="url">
 						<c:param name="action" value="itemList" />
 						<c:param name="page" value="${page}" />
 					</c:url>
-					<a class="btn btn-primary" role="button" href="${url}">Back to
-						item list</a>
+					<a class="btn btn-primary" role="button" href="${url}">Back to item list</a>
 				</div>
 			</div>
 		</c:if>
