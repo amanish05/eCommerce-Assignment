@@ -1,0 +1,65 @@
+-- phpMyAdmin SQL Dump
+-- version 4.0.10deb1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Nov 30, 2016 at 01:32 PM
+-- Server version: 5.5.49-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.20
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Database: `cs3220stu50`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inventory_transactions`
+--
+
+CREATE TABLE IF NOT EXISTS `inventory_transactions` (
+  `ORDER_NUMBER` varchar(50) NOT NULL,
+  `CUSTOMER_NAME` varchar(50) DEFAULT NULL,
+  `CUSTOMER_EMAIL` varchar(50) DEFAULT NULL,
+  `INVENTORY_PGUID` varchar(50) DEFAULT NULL,
+  `INVENTORY_NAME` varchar(50) DEFAULT NULL,
+  `INVENTORY_DESC` varchar(250) DEFAULT NULL,
+  `INVENTORY_PRICE_PER_UNIT` float DEFAULT NULL,
+  `ORDERED_QUANTITY` int(5) DEFAULT NULL,
+  `AMOUNT` float DEFAULT NULL,
+  `ORDERED_DATETIME` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `inventory_transactions`
+--
+
+INSERT INTO `inventory_transactions` (`ORDER_NUMBER`, `CUSTOMER_NAME`, `CUSTOMER_EMAIL`, `INVENTORY_PGUID`, `INVENTORY_NAME`, `INVENTORY_DESC`, `INVENTORY_PRICE_PER_UNIT`, `ORDERED_QUANTITY`, `AMOUNT`, `ORDERED_DATETIME`) VALUES
+('101', 'ABC D', '123@mail.com', '9A2B33F61E814999B607272A70144FF0', 'aaa', 'df', 5, 1, 5, '2016-11-29 23:45:10'),
+('0000100', 'Jane Doe', 'abc@mail.com', '00B12566D5A4481BAA73B41B9637F01B', 'Test', 'test', 2, 1, 2, '2016-11-29 23:52:57'),
+('0000100', 'Jane Doe', 'abc@mail.com', '9A2B33F61E814999B607272A70144FF0', 'aaa', 'df', 5, 1, 5, '2016-11-29 23:52:58'),
+('0000100', 'Jane Doe', 'abc@mail.com', '16234BB7E0A14C7EA19F3FE20A3E1CEA', 'adsf', 'gf', 10, 1, 10, '2016-11-29 23:52:58'),
+('0000101', 'C A', 'er@mail.com', '00B12566D5A4481BAA73B41B9637F01B', 'Test', 'test', 2, 2, 4, '2016-11-29 23:55:08'),
+('0000101', 'C A', 'er@mail.com', '16234BB7E0A14C7EA19F3FE20A3E1CEA', 'adsf', 'gf', 10, 2, 20, '2016-11-29 23:55:08'),
+('0000101', 'C A', 'er@mail.com', '9A2B33F61E814999B607272A70144FF0', 'aaa', 'df', 5, 2, 10, '2016-11-29 23:55:08'),
+('0000100', 'X Y', '234@mail.com', '00B12566D5A4481BAA73B41B9637F01B', 'Test', 'test', 2, 1, 2, '2016-11-30 00:07:46'),
+('0000100', 'X Y', '234@mail.com', '16234BB7E0A14C7EA19F3FE20A3E1CEA', 'adsf', 'gf', 10, 1, 10, '2016-11-30 00:07:46'),
+('0000100', 'X Y', '234@mail.com', '9A2B33F61E814999B607272A70144FF0', 'aaa', 'df', 5, 1, 5, '2016-11-30 00:07:46'),
+('0000101', 'ASDF A', 'XXX@mail.com', '00B12566D5A4481BAA73B41B9637F01B', 'Test', 'test', 2, 1, 2, '2016-11-30 00:19:04'),
+('0000101', 'ASDF A', 'XXX@mail.com', '16234BB7E0A14C7EA19F3FE20A3E1CEA', 'adsf', 'gf', 10, 1, 10, '2016-11-30 00:19:04'),
+('0000101', 'ASDF A', 'XXX@mail.com', '9A2B33F61E814999B607272A70144FF0', 'aaa', 'df', 5, 1, 5, '2016-11-30 00:19:04'),
+('0000100', 'zzd f', '123@mail.com', '9A2B33F61E814999B607272A70144FF0', 'aaa', 'df', 5, 1, 5, '2016-11-30 00:20:09'),
+('0000101', 'Jane D', 'abc@mail.com', '16234BB7E0A14C7EA19F3FE20A3E1CEA', 'adsf', 'gf', 10, 2, 20, '2016-11-30 21:29:13');
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
