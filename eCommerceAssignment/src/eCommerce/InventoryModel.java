@@ -9,6 +9,23 @@ public class InventoryModel {
 	private String description;
 	private int quantity;
 	private float price;
+	private String email;
+	
+	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	private float total;
+	
+	public float getTotal() {
+		return total;
+	}
+	public void setTotal(float total) {
+		this.total = total;
+	}
 	private Date addedDate;
 	
 	public String getId() {

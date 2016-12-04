@@ -129,5 +129,8 @@
 				
 		</form>					
 	</c:if>
+	<div class="col-md-20">
+		<a class="btn btn-primary btn-sm" href="Inventory" >Back to Inventory Manager</a>
+	</div>
 </body>
 </html>

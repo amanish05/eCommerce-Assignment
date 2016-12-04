@@ -49,7 +49,10 @@
 				</table>
 			</div>
 		</div>					
-	</c:if>		
-	<a class="btn btn-primary btn-sm" href="AddItem">Add New Item</a>		
+	</c:if>
+	<div class="col-md-20">
+		<a class="btn btn-primary btn-sm" href="AddItem">Add New Item</a>	
+		<a class="btn btn-primary btn-sm" href="Store" >Back to store Front</a>
+	</div>		
 </body>
 </html>

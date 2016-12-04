@@ -120,7 +120,8 @@
 			</div>
 		</c:if>
 		<div class="col-md-20">
-			<a class="btn btn-primary btn-lg active" href="Inventory" >Inventory Manager</a>
+			<a class="btn btn-primary btn-sm" href="Inventory" >Inventory Manager</a>
+			<a class="btn btn-primary btn-sm" href="History" >History</a>
 		</div>
 	</div>
 	
