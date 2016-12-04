@@ -87,26 +87,28 @@
 					</table>
 				</div>
 			</div>
-		</c:if>
-		
+		</c:if>		
 		<form class="form-inline" action='Checkout' method='post'>
-            <div class="form-group">
-                <label for="InputName">Name</label>
-                <input type="text" class="form-control" name="inputName" placeholder="Jane Doe" value="${inputName }">
-                <c:if test="${not empty nameError}">
-                    <br />
-                    <p style='color:#f00;'>Please enter your name and lastname</p>
-                </c:if>
-            </div>
-            
-            <div class="form-group" style="margin-left:45px;">
-                <label for="InputEmail">Email</label>
-                <input type="email" class="form-control" name="inputEmail" placeholder="jane.doe@example.com" value="${inputEmail }">
-                <c:if test="${not empty emailError}">
-                    <br />
-                    <p style='color:#f00;'>Please enter your email</p>
-                 </c:if>
-            </div>
+			<c:if test="${empty orderCompleted}">
+	            <div class="form-group">
+	                <label for="InputName">Name</label>
+	                <input type="text" class="form-control" name="inputName" placeholder="Jane Doe" value="${inputName }">
+	                <c:if test="${not empty nameError}">
+	                    <br />
+	                    <p style='color:#f00;'>Please enter your name and lastname</p>
+	                </c:if>
+	            </div>
+	            
+	            
+	            <div class="form-group" style="margin-left:45px;">
+	                <label for="InputEmail">Email</label>
+	                <input type="email" class="form-control" name="inputEmail" placeholder="jane.doe@example.com" value="${inputEmail }">
+	                <c:if test="${not empty emailError}">
+	                    <br />
+	                    <p style='color:#f00;'>Please enter your email</p>
+	                 </c:if>
+	            </div>
+            </c:if>
             <div class="row">
                     <div class="col-md-2 col-md-offset-8">
                         <c:url value="Store" var="url">
