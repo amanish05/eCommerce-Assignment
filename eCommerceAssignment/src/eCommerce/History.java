@@ -40,9 +40,9 @@ public class History extends HttpServlet {
 		String email = request.getParameter("email");
 		System.out.println("History: post method invoked");
 		
-		String sql =  "Select i.ORDER_NUMBER, i.ORDERED_DATETIME from inventory_transactions i where i.CUSTOMER_EMAIL = ? GROUP BY ORDER_NUMBER";		
+		String sql =  "Select i.ORDER_NUMBER, i.ORDERED_DATETIME from inventory_transactions i where i.CUSTOMER_EMAIL = ? GROUP BY ORDER_NUMBER order by ORDERED_DATETIME DESC";		
 		String oredrSql =  "Select i.CUSTOMER_EMAIL, i.INVENTORY_NAME, i.INVENTORY_PRICE_PER_UNIT, i.ORDERED_QUANTITY, i.AMOUNT from "
-				+ "inventory_transactions i where ORDER_NUMBER = ? ";
+				+ "inventory_transactions i where ORDER_NUMBER = ?";
 		
 		try{
 			if(email == null || email.trim().length() == 0){
