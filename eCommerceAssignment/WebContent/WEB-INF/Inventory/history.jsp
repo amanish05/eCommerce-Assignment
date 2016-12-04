@@ -15,54 +15,60 @@
 </head>
 <body>
 <body>
-	
-	<form action='History' method='post' class="form-inline">
-		<div class="form-group">
-			<label for="email"><strong>Email </strong></label>
-			<input type='text' name="email" class="form-control" placeholder='Email' />
-		</div>				
-		<input type='submit' value='Fetch Records' class="btn btn-default" />		
-		<a class="btn btn-primary btn-sm" href="Store" >Back to store Front</a>
-		
-	</form>
-	
-	<c:if test="${empty orderItems}">
-		<div class="jumbotron">
-			<h1>
-				Uh-Oh! <small>There are no items to display.</small>
-			</h1>
+	<div class="container">
+		<div class="page-header">
+			<h3>Shopping History</h3>
 		</div>
-	</c:if>
-	
-	<c:if test="${not empty orderItems}">
-		<c:forEach items="${orderItems }" var="item">
-			<div class="panel-heading"><strong>Order: ${item.id} </strong>    Date: ${item.createdDate}  </div>
-			<table class="table table-hover table-striped table-bordered">
-			<thead>
-				<tr>
-					<th style="text-align: center;">Item Name</th>
-					<th style="text-align: center;">Item Price</th>
-					<th style="text-align: center;">Quantity</th>
-					<th style="text-align: center;">Total Price</th>					
-				</tr>
-			</thead>			
-			<tbody>
-			<c:forEach items="${item.list}" var="order">
+		<form action='History' method='post' class="form-inline">
+			<div class="form-group">
+				<label for="email"><strong>Email </strong></label> <input
+					type='text' name="email" class="form-control" placeholder='Email' />
+			</div>
+			<input type='submit' value='Fetch Records' class="btn btn-default" />
+			<a class="btn btn-primary btn-sm" href="Store">Back to store
+				Front</a>
+		</form>
+
+		<c:if test="${empty orderItems}">
+			<div class="jumbotron">
+				<h1>
+					Uh-Oh! <small>There are no items to display.</small>
+				</h1>
+			</div>
+		</c:if>
+
+		<c:if test="${not empty orderItems}">
+			<c:forEach items="${orderItems }" var="item">
+				<div class="panel-heading">
+					<strong>Order: ${item.id} </strong> Date: ${item.createdDate}
+				</div>
+				<table class="table table-hover table-striped table-bordered">
+					<thead>
 						<tr>
-							<td>${order.name}</td>
-							<td>${order.price}</td>
-							<td>${order.quantity}</td>
-							<td>${order.total}</td>							
+							<th style="text-align: center;">Item Name</th>
+							<th style="text-align: center;">Item Price</th>
+							<th style="text-align: center;">Quantity</th>
+							<th style="text-align: center;">Total Price</th>
 						</tr>
-					</c:forEach>
-					<tr>
-						<td colspan="3" style="text-align: right;"><strong>Total Order price</strong></td>
-						<td><strong> ${item.orderTotal } </strong></td>						
-					</tr>					
-				
-			</tbody>
-		</table>
-		</c:forEach>									
-	</c:if>
+					</thead>
+					<tbody>
+						<c:forEach items="${item.list}" var="order">
+							<tr>
+								<td>${order.name}</td>
+								<td>${order.price}</td>
+								<td>${order.quantity}</td>
+								<td>${order.total}</td>
+							</tr>
+						</c:forEach>
+						<tr>
+							<td colspan="3" style="text-align: right;"><strong>Total
+									Order price</strong></td>
+							<td><strong> ${item.orderTotal } </strong></td>
+						</tr>
+					</tbody>
+				</table>
+			</c:forEach>
+		</c:if>
+	</div>
 </body>
 </html>
