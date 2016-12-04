@@ -116,7 +116,9 @@
                         <a class="btn btn-primary" role="button" href="${url}">Continue
                             Shopping</a>
                     </div>
-                    <button type="submit" class="btn btn-primary">Complete Purchase</button>
+                    <c:if test="${empty orderCompleted}">
+                        <button type="submit" class="btn btn-primary">Complete Purchase</button>
+                    </c:if>
                 </div>
         </form>
 	</div>

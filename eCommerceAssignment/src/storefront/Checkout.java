@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +19,8 @@ import dbConnection.DBConnection;
 @WebServlet("/Checkout")
 public class Checkout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	int idSeed = 100;
+	private static final AtomicLong sequence = new AtomicLong(
+			System.currentTimeMillis() / 1000);
 
 	public Checkout() {
 		super();
@@ -53,7 +55,7 @@ public class Checkout extends HttpServlet {
 			doGet(request, response);
 			return;
 		} else {
-			String orderNumber = String.format("%07d", idSeed++);
+			String orderNumber = String.valueOf(uniqueNumber());
 			ShoppingCart shoppingCart = (ShoppingCart) request.getSession()
 					.getAttribute("cart");
 			Collection<ShoppingCartItem> shoppingCartItems = shoppingCart
@@ -140,4 +142,7 @@ public class Checkout extends HttpServlet {
 		pstmt.executeBatch();
 	}
 
+	private static long uniqueNumber() {
+		return sequence.incrementAndGet();
+	}
 }
